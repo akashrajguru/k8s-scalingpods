@@ -23,3 +23,26 @@ kubectl create -f replicaset-demo.yml --save-config
 kubectl apply -f replicaset-demo-scaled.yml
 
 kubectl get pods
+
+###command to destroy pod by pod name
+# copy last pod name into environment variable
+POD_NAME=$(kubectl get pods -o name | tail -1)
+# delete pod
+kubectl delete $POD_NAME
+
+# Removinf pod lables used by ReplicaSet selector 
+POD_NAME=$(kubectl get pods -o name | tail -1)
+
+# - at the end of the name of the labels section indicates that a label should be removed
+kubectl label $POD_NAME service- 
+
+kubectl describe $POD_NAME
+
+kubectl get pods --show-labels
+
+# Add the label which was removed
+kubectl label $POD_NAME service=replicaset-demo
+
+kubectl get pods --show-labels
+
+kubectl delete -f replicaset-demo-scaled.yml
